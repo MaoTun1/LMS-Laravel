@@ -29,11 +29,11 @@ jobs:
       ##############################
     # ✅ SAST Scan (Semgrep)
     ##############################
-    - name: 🧪 Run Semgrep SAST
-      uses: returntocorp/semgrep-action@v1
-      with:
-       config: >
-        p/php
-        p/security-audit
-       args: --no-error-on-findings
+    -  name: 🧪 Run Semgrep SAST
+       uses: returntocorp/semgrep-action@v1
+       with:
+        config: >
+         p/php
+         p/security-audit
+        args: --no-error-on-findings
 
