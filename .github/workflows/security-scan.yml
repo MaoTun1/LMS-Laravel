@@ -1,0 +1,43 @@
+name: Security Scanning (SAST + Dependency)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  sast-and-dep-scan:
+    name: Run SAST and Dependency Scanners
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: mbstring, xml, bcmath, zip
+        coverage: none
+
+    - name: Install dependencies
+      run: |
+        composer install --no-interaction --no-scripts --no-progress
+
+    ##############################
+    # ✅ Dependency Check (osv)
+    ##############################
+    - name: Run osv-scanner on composer.lock
+      uses: google/osv-scanner-action@v1
+      with:
+        scan-args: --lock-file=./composer.lock
+
+    ##############################
+    # ✅ SAST Scan (Semgrep)
+    ##############################
+    - name: Run Semgrep SAST
+      uses: returntocorp/semgrep-action@v1
+      with:
+        config: p/laravel
