@@ -23,18 +23,14 @@ jobs:
             --metrics=off \
             --config="p/default"
 
-      - name: save report as pipeline artifact
+      - name: save semgrep report as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: report.sarif
+          name: semgrep-report
           path: report.sarif
 
-      - name: Download report
-        uses: actions/download-artifact@v4
-        with:
-          name: report.sarif
-
       - name: Run Gitleaks Secret Scan
-        uses: zricethezav/gitleaks-action@v2
-        with:
-          args: --redact
+        run: |
+          gitleaks detect --redact --exit-code=2 --report-format=sarif --report-path=results.sarif
+        working-directory: ./  # Burada kullanılır
+        shell: bash
