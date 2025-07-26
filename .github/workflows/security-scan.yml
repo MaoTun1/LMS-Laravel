@@ -1,39 +1,41 @@
-name: Security Scanning (SAST + Dependency)
+name: Semgrep Full Scan
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 1 * * 6'
 
 jobs:
-  sast-and-dep-scan:
-    runs-on: ubuntu-latest
-    name: Run SAST and Dependency Scanners
 
-    steps:
-    - name: 📦 Checkout code
-      uses: actions/checkout@v3
+  semgrep-full:
+      runs-on: ubuntu-latest
+      container:
+        image: returntocorp/semgrep
 
-    - name: 🐘 Set up PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.1'
-        extensions: mbstring, xml, bcmath, zip
-        coverage: none
+      steps:
 
+        # step 1
+        - name: clone application source code
+          uses: actions/checkout@v3
 
-    ##############################
-    # ✅ SAST Scan (Semgrep)
-    ##############################
-      ##############################
-    # ✅ SAST Scan (Semgrep)
-    ##############################
-    -  name: 🧪 Run Semgrep SAST
-       uses: returntocorp/semgrep-action@v1
-       with:
-        config: >
-         p/php
-         p/security-audit
-        args: --no-error-on-findings
+        # step 2
+        - name: full scan
+          run: |
+            semgrep \
+              --sarif --output report.sarif \
+              --metrics=off \
+              --config="p/default"
 
+        # step 3
+        
+        - name: save report as pipeline artifact
+          uses: actions/upload-artifact@v3
+          with:
+            name: report.sarif
+            path: report.sarif
+            
+        # step 4
+        - name: Download report
+          uses: actions/download-artifact@v2
+          with: 
+            name: report.sarif
