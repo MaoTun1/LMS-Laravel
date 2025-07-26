@@ -35,5 +35,5 @@ jobs:
        config: >
         p/php
         p/security-audit
-
+       strict: false
 
