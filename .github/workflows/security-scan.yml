@@ -32,6 +32,8 @@ jobs:
     - name: 🧪 Run Semgrep SAST
       uses: returntocorp/semgrep-action@v1
       with:
-       config: ./semgrep.yml
+       config: >
+        p/php
+        p/security-audit
 
 
