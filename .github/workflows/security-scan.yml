@@ -8,36 +8,44 @@ on:
 
 jobs:
   sast-and-dep-scan:
-    name: Run SAST and Dependency Scanners
     runs-on: ubuntu-latest
+    name: Run SAST and Dependency Scanners
 
     steps:
-    - name: Checkout code
+    - name: 📦 Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up PHP
+    - name: 🐘 Set up PHP
       uses: shivammathur/setup-php@v2
       with:
         php-version: '8.1'
         extensions: mbstring, xml, bcmath, zip
         coverage: none
 
-    - name: Install dependencies
-      run: |
-        composer install --no-interaction --no-scripts --no-progress
+    - name: 📥 Install Composer dependencies
+      run: composer install --no-interaction --no-scripts --no-progress
 
     ##############################
-    # ✅ Dependency Check (osv)
+    # ✅ Dependency Check (OWASP)
     ##############################
-    - name: Run osv-scanner on composer.lock
-      uses: google/osv-scanner-action@v1
+    - name: 🔍 Run OWASP Dependency-Check
+      uses: dependency-check/Dependency-Check_Action@main
       with:
-        scan-args: --lock-file=./composer.lock
+        project: 'LMS-Laravel'
+        path: '.'
+        format: 'HTML'
+        out: 'reports'
+
+    - name: 📤 Upload Dependency-Check report as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: dependency-check-report
+        path: reports/dependency-check-report.html
 
     ##############################
     # ✅ SAST Scan (Semgrep)
     ##############################
-    - name: Run Semgrep SAST
+    - name: 🧪 Run Semgrep SAST
       uses: returntocorp/semgrep-action@v1
       with:
         config: p/laravel
