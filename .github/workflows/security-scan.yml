@@ -33,3 +33,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: report.sarif
+
+      - name: Run Gitleaks Secret Scan
+        uses: zricethezav/gitleaks-action@v2
+        with:
+          args: --redact
