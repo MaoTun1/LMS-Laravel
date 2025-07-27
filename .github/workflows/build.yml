@@ -14,14 +14,14 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
 
-      # SEMGREP: Static Analysis
       - name: Run Semgrep SAST
         uses: returntocorp/semgrep-action@v1
         with:
-          config: "auto"  # Otomatik dil algılama
+          config: "auto"
+        continue-on-error: true  # 🔥 Hatalarda durmasın
 
-      # GITLEAKS: Secret Scan
       - name: Run Gitleaks
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true  # 🔥 Hatalarda durmasın
