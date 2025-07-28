@@ -2,26 +2,128 @@ name: Universal Security Scan
 
 on:
   push:
-    branches: [main, master]
+    branches: [master]
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: write  # Pages yayını için
+  pull-requests: write  # PR'a yorum yazabilmek için
+
 jobs:
-  sast-and-secret-scan:
+  security-scan:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
 
-      - name: Run Semgrep SAST
-        uses: returntocorp/semgrep-action@v1
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          config: "auto"
-        continue-on-error: true  # 🔥 Hatalarda durmasın
+          python-version: 3.11
+
+      #####################################################
+      ## SEMGREP
+      #####################################################
+      - name: Install Semgrep
+        run: pip install semgrep
+
+      - name: Run Semgrep
+        run: semgrep --config auto --quiet > semgrep-report.txt || true
+
+      #####################################################
+      ## GITLEAKS
+      #####################################################
+      - name: Install Gitleaks
+        run: |
+          curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64 -o gitleaks
+          chmod +x gitleaks
+          sudo mv gitleaks /usr/local/bin/
 
       - name: Run Gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        continue-on-error: true  # 🔥 Hatalarda durmasın
+        run: gitleaks detect --no-git --report-format json --report-path gitleaks-report.json || true
+
+      #####################################################
+      ## TRUFFLEHOG
+      #####################################################
+      - name: Run TruffleHog
+        uses: trufflesecurity/trufflehog@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          output_format: json
+          output_file: trufflehog-report.json
+
+      #####################################################
+      ## TRIVY
+      #####################################################
+      - name: Run Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          ignore-unfixed: true
+          format: table
+          output: trivy-report.txt
+
+      #####################################################
+      ## RAPOR .MD OLUŞTUR
+      #####################################################
+      - name: Generate Markdown Report
+        run: |
+          echo "# 🔐 Security Scan Report" > report.md
+          echo "## 🧠 Semgrep Findings" >> report.md
+          if [ -s semgrep-report.txt ]; then echo '```' >> report.md && cat semgrep-report.txt >> report.md && echo '```' >> report.md; else echo "No issues found ✅" >> report.md; fi
+
+          echo "## 🕵️‍♂️ Gitleaks Secrets" >> report.md
+          if [ -s gitleaks-report.json ]; then cat gitleaks-report.json | jq -r '.[] | "* " + .RuleID + " in `" + .File + "` at line " + (.StartLine | tostring)' >> report.md; else echo "No secrets found ✅" >> report.md; fi
+
+          echo "## 🔍 TruffleHog History" >> report.md
+          if [ -s trufflehog-report.json ]; then cat trufflehog-report.json | jq -r '.results[]?.StringsFound[]? | "* Secret in `" + .SourceMetadata.Data + "`"' >> report.md; else echo "No history secrets found ✅" >> report.md; fi
+
+          echo "## 📦 Trivy Dependency Scan" >> report.md
+          if [ -s trivy-report.txt ]; then echo '```' >> report.md && cat trivy-report.txt >> report.md && echo '```' >> report.md; else echo "No vulnerabilities found ✅" >> report.md; fi
+
+      #####################################################
+      ## HTML YAYINI İÇİN RAPORU KOPYALA
+      #####################################################
+      - name: Convert Markdown to HTML
+        run: |
+          mkdir public
+          pandoc report.md -o public/index.html
+
+      - name: Upload HTML to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+
+      #####################################################
+      ## ARTIFACT YÜKLEME
+      #####################################################
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-scan-report
+          path: report.md
+
+      #####################################################
+      ## STEP SUMMARY (UI ÖZET)
+      #####################################################
+      - name: GitHub Summary UI
+        run: |
+          echo "### 🔐 Security Scan Completed" >> $GITHUB_STEP_SUMMARY
+          echo "- 📄 [Download report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+          echo "- 🌐 [View full HTML report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/)" >> $GITHUB_STEP_SUMMARY
+
+      #####################################################
+      ## PR'A YORUM BIRAK (SADELEŞTİRİLMİŞ)
+      #####################################################
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: security-scan
+          message: |
+            ✅ **Security scan completed**
+            📄 [Markdown Report Artifact](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            🌐 [HTML Report (GitHub Pages)](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/)
