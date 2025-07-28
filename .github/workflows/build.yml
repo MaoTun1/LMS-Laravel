@@ -89,6 +89,9 @@ jobs:
       - name: Convert Markdown to HTML
         run: |
           mkdir -p public
+          sudo apt update
+          sudo apt install -y pandoc
+          mkdir -p public
           pandoc report.md -o public/index.html
 
       - name: Upload HTML to GitHub Pages
