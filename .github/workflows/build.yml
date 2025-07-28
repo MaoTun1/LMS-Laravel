@@ -88,7 +88,7 @@ jobs:
       #####################################################
       - name: Convert Markdown to HTML
         run: |
-          mkdir public
+          mkdir -p public
           pandoc report.md -o public/index.html
 
       - name: Upload HTML to GitHub Pages
