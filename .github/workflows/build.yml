@@ -7,55 +7,82 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write  # Pages yayını için
-  pull-requests: write  # PR'a yorum yazabilmek için
+  contents: write
+  pull-requests: write
+  security-events: write
 
 jobs:
   security-scan:
     runs-on: ubuntu-latest
 
     steps:
+      #####################################################
+      ## CHECKOUT
+      #####################################################
       - name: Checkout source code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
+      #####################################################
+      ## PYTHON
+      #####################################################
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
-          python-version: 3.11
+          python-version: "3.11"
+          cache: "pip"
+
+      #####################################################
+      ## SYSTEM DEPS
+      #####################################################
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq pandoc
 
       #####################################################
       ## SEMGREP
       #####################################################
       - name: Install Semgrep
-        run: pip install semgrep
+        run: |
+          python -m pip install --upgrade pip
+          pip install semgrep
 
       - name: Run Semgrep
-        run: semgrep --config auto --quiet > semgrep-report.txt || true
+        run: |
+          semgrep --config auto --quiet \
+          > semgrep-report.txt || true
 
       #####################################################
       ## GITLEAKS
       #####################################################
       - name: Install Gitleaks
         run: |
-          curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64 -o gitleaks
+          GITLEAKS_VERSION="8.24.2"
+
+          curl -sSL \
+          "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+          -o gitleaks.tar.gz
+
+          tar -xzf gitleaks.tar.gz
           chmod +x gitleaks
           sudo mv gitleaks /usr/local/bin/
 
       - name: Run Gitleaks
         run: |
           git fetch --unshallow || true
+
           gitleaks detect \
-          --report-format json \
-          --report-path gitleaks-report.json \
-          --redact \
-          --verbose \
-          || true
+            --report-format json \
+            --report-path gitleaks-report.json \
+            --redact \
+            --verbose \
+            || true
 
       #####################################################
       ## TRUFFLEHOG
       #####################################################
       - name: Run TruffleHog
-        uses: trufflesecurity/trufflehog@main
+        uses: trufflesecurity/trufflehog@v3.90.5
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           output_format: json
@@ -65,7 +92,7 @@ jobs:
       ## TRIVY
       #####################################################
       - name: Run Trivy
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.33.1
         with:
           scan-type: fs
           ignore-unfixed: true
@@ -73,34 +100,57 @@ jobs:
           output: trivy-report.txt
 
       #####################################################
-      ## RAPOR .MD OLUŞTUR
+      ## MARKDOWN REPORT
       #####################################################
       - name: Generate Markdown Report
         run: |
           echo "# 🔐 Security Scan Report" > report.md
+
           echo "## 🧠 Semgrep Findings" >> report.md
-          if [ -s semgrep-report.txt ]; then echo '```' >> report.md && cat semgrep-report.txt >> report.md && echo '```' >> report.md; else echo "No issues found ✅" >> report.md; fi
+          if [ -s semgrep-report.txt ]; then
+            echo '```' >> report.md
+            cat semgrep-report.txt >> report.md
+            echo '```' >> report.md
+          else
+            echo "No issues found ✅" >> report.md
+          fi
 
           echo "## 🕵️‍♂️ Gitleaks Secrets" >> report.md
-          if [ -s gitleaks-report.json ]; then cat gitleaks-report.json | jq -r '.[] | "* " + .RuleID + " in `" + .File + "` at line " + (.StartLine | tostring)' >> report.md; else echo "No secrets found ✅" >> report.md; fi
+          if [ -s gitleaks-report.json ]; then
+            jq -r '.[] | "* " + .RuleID + " in `" + .File + "` at line " + (.StartLine | tostring)' \
+            gitleaks-report.json >> report.md
+          else
+            echo "No secrets found ✅" >> report.md
+          fi
 
           echo "## 🔍 TruffleHog History" >> report.md
-          if [ -s trufflehog-report.json ]; then cat trufflehog-report.json | jq -r '.results[]?.StringsFound[]? | "* Secret in `" + .SourceMetadata.Data + "`"' >> report.md; else echo "No history secrets found ✅" >> report.md; fi
+          if [ -s trufflehog-report.json ]; then
+            jq -r '.results[]?.StringsFound[]? | "* Secret in `" + .SourceMetadata.Data + "`"' \
+            trufflehog-report.json >> report.md
+          else
+            echo "No history secrets found ✅" >> report.md
+          fi
 
           echo "## 📦 Trivy Dependency Scan" >> report.md
-          if [ -s trivy-report.txt ]; then echo '```' >> report.md && cat trivy-report.txt >> report.md && echo '```' >> report.md; else echo "No vulnerabilities found ✅" >> report.md; fi
+          if [ -s trivy-report.txt ]; then
+            echo '```' >> report.md
+            cat trivy-report.txt >> report.md
+            echo '```' >> report.md
+          else
+            echo "No vulnerabilities found ✅" >> report.md
+          fi
 
       #####################################################
-      ## HTML YAYINI İÇİN RAPORU KOPYALA
+      ## HTML REPORT
       #####################################################
       - name: Convert Markdown to HTML
         run: |
           mkdir -p public
-          sudo apt update
-          sudo apt install -y pandoc
-          mkdir -p public
           pandoc report.md -o public/index.html
 
+      #####################################################
+      ## GITHUB PAGES
+      #####################################################
       - name: Upload HTML to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
@@ -108,7 +158,7 @@ jobs:
           publish_dir: ./public
 
       #####################################################
-      ## ARTIFACT YÜKLEME
+      ## ARTIFACT
       #####################################################
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -117,7 +167,7 @@ jobs:
           path: report.md
 
       #####################################################
-      ## STEP SUMMARY (UI ÖZET)
+      ## STEP SUMMARY
       #####################################################
       - name: GitHub Summary UI
         run: |
@@ -126,7 +176,7 @@ jobs:
           echo "- 🌐 [View full HTML report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/)" >> $GITHUB_STEP_SUMMARY
 
       #####################################################
-      ## PR'A YORUM BIRAK (SADELEŞTİRİLMİŞ)
+      ## PR COMMENT
       #####################################################
       - name: Comment on PR
         if: github.event_name == 'pull_request'
@@ -134,6 +184,10 @@ jobs:
         with:
           header: security-scan
           message: |
-            ✅ **Security scan completed**
-            📄 [Markdown Report Artifact](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
-            🌐 [HTML Report (GitHub Pages)](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/)
+            ✅ Security scan completed
+
+            📄 Markdown Report:
+            https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            🌐 HTML Report:
+            https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
