@@ -8,6 +8,7 @@
                                                
     database/factories/Entities/UserFactory.php
    ❯❯❱ generic.secrets.security.detected-bcrypt-hash.detected-bcrypt-hash
+          ❰❰ Blocking ❱❱
           bcrypt hash detected        
           Details: https://sg.run/3A8G
                                       
@@ -15,6 +16,7 @@
                                              
     resources/js/components/ChatComponent.vue
     ❯❱ javascript.vue.security.audit.xss.templates.avoid-v-html.avoid-v-html
+          ❰❰ Blocking ❱❱
           Dynamically rendering arbitrary HTML on your website can be very dangerous because it can easily
           lead to XSS vulnerabilities. Only use HTML interpolation on trusted content and never on user-  
           provided content.                                                                               
@@ -25,23 +27,39 @@
               
     server.php
     ❯❱ php.lang.security.injection.tainted-filename.tainted-filename
+          ❰❰ Blocking ❱❱
           File name based on user input risks server-side request forgery.
           Details: https://sg.run/Ayqp                                    
                                                                           
            17┆ if ($uri !== &#39;/&#39; &amp;&amp; file_exists(__DIR__.&#39;/public&#39;.$uri)) {
 </code></pre>
 <h2 id="gitleaks-secrets">🕵️‍♂️ Gitleaks Secrets</h2>
-<p>No secrets found ✅ ## 🔍 TruffleHog History No history secrets found
-✅ ## 📦 Trivy Dependency Scan</p>
+<ul>
+<li>generic-api-key in
+<code>public/vendor/laraberg/js/laraberg.js</code> at line 14</li>
+<li>generic-api-key in <code>vendor/laraberg/js/laraberg.js</code> at
+line 14</li>
+<li>generic-api-key in
+<code>public/vendor/laraberg/js/laraberg.js</code> at line 20</li>
+<li>generic-api-key in
+<code>public/vendor/laraberg/js/laraberg.js</code> at line 20</li>
+<li>generic-api-key in
+<code>public/vendor/laraberg/js/laraberg.js</code> at line 14</li>
+<li>generic-api-key in
+<code>public/vendor/laraberg/js/laraberg.js</code> at line 20</li>
+<li>private-key in <code>storage/credentials.json</code> at line 5 ## 🔍
+TruffleHog History No history secrets found ✅ ## 📦 Trivy Dependency
+Scan</li>
+</ul>
 <pre><code>
 Report Summary
 
 ┌───────────────────┬──────────┬─────────────────┬─────────┐
 │      Target       │   Type   │ Vulnerabilities │ Secrets │
 ├───────────────────┼──────────┼─────────────────┼─────────┤
-│ composer.lock     │ composer │       26        │    -    │
+│ composer.lock     │ composer │       36        │    -    │
 ├───────────────────┼──────────┼─────────────────┼─────────┤
-│ package-lock.json │   npm    │        7        │    -    │
+│ package-lock.json │   npm    │        6        │    -    │
 └───────────────────┴──────────┴─────────────────┴─────────┘
 Legend:
 - &#39;-&#39;: Not scanned
@@ -52,134 +70,168 @@ For OSS Maintainers: VEX Notice
 --------------------------------
 If you&#39;re an OSS maintainer and Trivy has detected vulnerabilities in your project that you believe are not actually exploitable, consider issuing a VEX (Vulnerability Exploitability eXchange) statement.
 VEX allows you to communicate the actual status of vulnerabilities in your project, improving security transparency and reducing false positives for your users.
-Learn more and start using VEX: https://trivy.dev/v0.64/docs/supply-chain/vex/repo#publishing-vex-documents
+Learn more and start using VEX: https://trivy.dev/docs/v0.70/guide/supply-chain/vex/repo#publishing-vex-documents
 
 To disable this notice, set the TRIVY_DISABLE_VEX_NOTICE environment variable.
 
 
 composer.lock (composer)
 ========================
-Total: 26 (UNKNOWN: 0, LOW: 1, MEDIUM: 11, HIGH: 12, CRITICAL: 2)
+Total: 36 (UNKNOWN: 0, LOW: 3, MEDIUM: 15, HIGH: 15, CRITICAL: 3)
 
-┌─────────────────────────┬─────────────────────┬──────────┬────────┬───────────────────┬───────────────────────────────────────────────────────────┬──────────────────────────────────────────────────────────────┐
-│         Library         │    Vulnerability    │ Severity │ Status │ Installed Version │                       Fixed Version                       │                            Title                             │
-├─────────────────────────┼─────────────────────┼──────────┼────────┼───────────────────┼───────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│ aws/aws-sdk-php         │ CVE-2023-51651      │ LOW      │ fixed  │ 3.158.10          │ 3.288.1                                                   │ Potential URI resolution path traversal in the AWS SDK for   │
-│                         │                     │          │        │                   │                                                           │ PHP                                                          │
-│                         │                     │          │        │                   │                                                           │ https://avd.aquasec.com/nvd/cve-2023-51651                   │
-├─────────────────────────┼─────────────────────┼──────────┤        ├───────────────────┼───────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│ firebase/php-jwt        │ CVE-2021-46743      │ CRITICAL │        │ v5.2.0            │ 6.0.0                                                     │ Key/algorithm type confusion                                 │
-│                         │                     │          │        │                   │                                                           │ https://avd.aquasec.com/nvd/cve-2021-46743                   │
-├─────────────────────────┼─────────────────────┼──────────┤        ├───────────────────┼───────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│ guzzlehttp/guzzle       │ CVE-2022-29248      │ HIGH     │        │ 7.2.0             │ 6.5.6, 7.4.3                                              │ Guzzle is a PHP HTTP client. Guzzle prior to versions 6.5.6  │
-│                         │                     │          │        │                   │                                                           │ and...                                                       │
-│                         │                     │          │        │                   │                                                           │ https://avd.aquasec.com/nvd/cve-2022-29248                   │
-│                         ├─────────────────────┤          │        │                   ├───────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│                         │ CVE-2022-31042      │          │        │                   │ 7.4.4, 6.5.7                                              │ Guzzle is an open source PHP HTTP client. In affected        │
-│                         │                     │          │        │                   │                                                           │ versions the...                                              │
-│                         │                     │          │        │                   │                                                           │ https://avd.aquasec.com/nvd/cve-2022-31042                   │
-│                         ├─────────────────────┤          │        │                   │                                                           ├──────────────────────────────────────────────────────────────┤
-│                         │ CVE-2022-31043      │          │        │                   │                                                           │ Guzzle is an open source PHP HTTP client. In affected        │
-│                         │                     │          │        │                   │                                                           │ versions `Author...                                          │
-│                         │                     │          │        │                   │                                                           │ https://avd.aquasec.com/nvd/cve-2022-31043                   │
-│                         ├─────────────────────┤          │        │                   ├───────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│                         │ CVE-2022-31090      │          │        │                   │ 7.4.5, 6.5.8                                              │ Guzzle, an extensible PHP HTTP client. `Authorization`       │
-│                         │                     │          │        │                   │                                                           │ headers on requ ...                                          │
-│                         │                     │          │        │                   │                                                           │ https://avd.aquasec.com/nvd/cve-2022-31090                   │
-│                         ├─────────────────────┤          │        │                   │                                                           ├──────────────────────────────────────────────────────────────┤
-│                         │ CVE-2022-31091      │          │        │                   │                                                           │ Guzzle, an extensible PHP HTTP client. `Authorization` and   │
-│                         │                     │          │        │                   │                                                           │ `Cookie` he ...                                              │
-│                         │                     │          │        │                   │                                                           │ https://avd.aquasec.com/nvd/cve-2022-31091                   │
-├─────────────────────────┼─────────────────────┤          │        ├───────────────────┼───────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│ guzzlehttp/psr7         │ CVE-2022-24775      │          │        │ 1.7.0             │ 1.8.4, 2.1.1                                              │ guzzlehttp/psr7 is a PSR-7 HTTP message library. Versions    │
-│                         │                     │          │        │                   │                                                           │ prior to 1.8 ......                                          │
-│                         │                     │          │        │                   │                                                           │ https://avd.aquasec.com/nvd/cve-2022-24775                   │
-│                         ├─────────────────────┤          │        │                   ├───────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│                         │ CVE-2023-29197      │          │        │                   │ 2.4.5, 1.9.1                                              │ guzzlehttp/psr7 is a PSR-7 HTTP message library              │
-│                         │                     │          │        │                   │                                                           │ implementation in PHP. ...                                   │
-│                         │                     │          │        │                   │                                                           │ https://avd.aquasec.com/nvd/cve-2023-29197                   │
-├─────────────────────────┼─────────────────────┼──────────┤        ├───────────────────┼───────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│ laravel/framework       │ CVE-2021-43617      │ CRITICAL │        │ v8.40.0           │ 8.71.0                                                    │ Laravel Framework through 8.70.2 does not sufficiently block │
-│                         │                     │          │        │                   │                                                           │ the uploa ...                                                │
-│                         │                     │          │        │                   │                                                           │ https://avd.aquasec.com/nvd/cve-2021-43617                   │
-│                         ├─────────────────────┼──────────┤        │                   ├───────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│                         │ CVE-2024-52301      │ HIGH     │        │                   │ 11.31.0, 6.20.45, 7.30.7, 8.83.28, 9.52.17, 10.48.23      │ Laravel is a web application framework. When the             │
-│                         │                     │          │        │                   │                                                           │ register_argc_argv ph ...                                    │
-│                         │                     │          │        │                   │                                                           │ https://avd.aquasec.com/nvd/cve-2024-52301                   │
-│                         ├─────────────────────┼──────────┤        │                   ├───────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│                         │ CVE-2021-43808      │ MEDIUM   │        │                   │ 7.30.6, 8.75.0, 6.20.42                                   │ Laravel is a web application framework. Laravel prior to     │
-│                         │                     │          │        │                   │                                                           │ versions 8.75 ......                                         │
-│                         │                     │          │        │                   │                                                           │ https://avd.aquasec.com/nvd/cve-2021-43808                   │
-│                         ├─────────────────────┤          │        │                   ├───────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│                         │ CVE-2025-27515      │          │        │                   │ 12.1.1, 11.44.1, 10.48.29                                 │ Laravel is a web application framework. When using wildcard  │
-│                         │                     │          │        │                   │                                                           │ validation ...                                               │
-│                         │                     │          │        │                   │                                                           │ https://avd.aquasec.com/nvd/cve-2025-27515                   │
-├─────────────────────────┼─────────────────────┼──────────┤        ├───────────────────┼───────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│ league/commonmark       │ GHSA-c2pc-g5qf-rfrf │ HIGH     │        │ 1.5.8             │ 2.6.0                                                     │ league/commonmark&#39;s quadratic complexity bugs may lead to a  │
-│                         │                     │          │        │                   │                                                           │ denial of service                                            │
-│                         │                     │          │        │                   │                                                           │ https://github.com/advisories/GHSA-c2pc-g5qf-rfrf            │
-│                         ├─────────────────────┼──────────┤        │                   ├───────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│                         │ CVE-2025-46734      │ MEDIUM   │        │                   │ 2.7.0                                                     │ league/commonmark is a PHP Markdown parser. A cross-site     │
-│                         │                     │          │        │                   │                                                           │ scripting (XS ...                                            │
-│                         │                     │          │        │                   │                                                           │ https://avd.aquasec.com/nvd/cve-2025-46734                   │
-├─────────────────────────┼─────────────────────┤          │        ├───────────────────┼───────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│ nesbot/carbon           │ CVE-2025-22145      │          │        │ 2.46.0            │ 3.8.4, 2.72.6                                             │ Carbon is an international PHP extension for DateTime.       │
-│                         │                     │          │        │                   │                                                           │ Application pas ...                                          │
-│                         │                     │          │        │                   │                                                           │ https://avd.aquasec.com/nvd/cve-2025-22145                   │
-├─────────────────────────┼─────────────────────┤          │        ├───────────────────┼───────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│ nyholm/psr7             │ GHSA-wjfc-pgfp-pv9c │          │        │ 1.3.1             │ 1.6.1                                                     │ Improper Input Validation in nyholm/psr7                     │
-│                         │                     │          │        │                   │                                                           │ https://github.com/advisories/GHSA-wjfc-pgfp-pv9c            │
-├─────────────────────────┼─────────────────────┼──────────┤        ├───────────────────┼───────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│ phpseclib/phpseclib     │ CVE-2023-52892      │ HIGH     │        │ 2.0.31            │ 1.0.22, 2.0.46, 3.0.33                                    │ In phpseclib before 1.0.22, 2.x before 2.0.46, and 3.x       │
-│                         │                     │          │        │                   │                                                           │ before 3.0.33, ...                                           │
-│                         │                     │          │        │                   │                                                           │ https://avd.aquasec.com/nvd/cve-2023-52892                   │
-│                         ├─────────────────────┼──────────┤        │                   ├───────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│                         │ CVE-2024-27354      │ MEDIUM   │        │                   │ 3.0.36, 2.0.47, 1.0.23                                    │ An issue was discovered in phpseclib 1.x before 1.0.23, 2.x  │
-│                         │                     │          │        │                   │                                                           │ before 2.0...                                                │
-│                         │                     │          │        │                   │                                                           │ https://avd.aquasec.com/nvd/cve-2024-27354                   │
-│                         ├─────────────────────┤          │        │                   │                                                           ├──────────────────────────────────────────────────────────────┤
-│                         │ CVE-2024-27355      │          │        │                   │                                                           │ An issue was discovered in phpseclib 1.x before 1.0.23, 2.x  │
-│                         │                     │          │        │                   │                                                           │ before 2.0...                                                │
-│                         │                     │          │        │                   │                                                           │ https://avd.aquasec.com/nvd/cve-2024-27355                   │
-├─────────────────────────┼─────────────────────┤          │        ├───────────────────┼───────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│ react/http              │ CVE-2022-36032      │          │        │ v1.1.0            │ 1.7.0                                                     │ ReactPHP&#39;s HTTP server parses encoded cookie names so        │
-│                         │                     │          │        │                   │                                                           │ malicious `__Host-` and `__Secure-`...                       │
-│                         │                     │          │        │                   │                                                           │ https://avd.aquasec.com/nvd/cve-2022-36032                   │
-│                         ├─────────────────────┤          │        │                   ├───────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│                         │ CVE-2023-26044      │          │        │                   │ 1.9.0                                                     │ react/http is an event-driven, streaming HTTP client and     │
-│                         │                     │          │        │                   │                                                           │ server implem ...                                            │
-│                         │                     │          │        │                   │                                                           │ https://avd.aquasec.com/nvd/cve-2023-26044                   │
-├─────────────────────────┼─────────────────────┤          │        ├───────────────────┼───────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│ symfony/http-foundation │ CVE-2024-50345      │          │        │ v5.2.4            │ 3.0.0, 5.4.0, 6.1.0, 6.3.0, 6.4.0, 5.1.0, 4.0.0, 5.2.0,   │ symfony/http-foundation is a module for the Symphony PHP     │
-│                         │                     │          │        │                   │ 5.3.0, 5.4.46, 6.2.0, 6.4.14, 7.1.0, 5.0.0, 7.1.7         │ framework whi ...                                            │
-│                         │                     │          │        │                   │                                                           │ https://avd.aquasec.com/nvd/cve-2024-50345                   │
-├─────────────────────────┼─────────────────────┼──────────┤        ├───────────────────┼───────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│ symfony/http-kernel     │ CVE-2022-24894      │ HIGH     │        │ v5.2.6            │ 2.1.0, 2.2.0, 2.5.0, 3.1.0, 4.1.0, 4.4.50, 5.3.0, 5.4.20, │ Symfony is a PHP framework for web and console applications  │
-│                         │                     │          │        │                   │ 2.6.0, 2.7.0, 3.3.0, 4.4.0, 5.1.0, 6.2.6, 2.4.0, 2.8.0,   │ and a...                                                     │
-│                         │                     │          │        │                   │ 3.0.0, 3.2.0, 4.0.0, 4.2.0, 5.4.0, 6.0.20, 2.3.0, 3.4.0,  │ https://avd.aquasec.com/nvd/cve-2022-24894                   │
-│                         │                     │          │        │                   │ 4.3.0, 5.2.0, 6.1.12                                      │                                                              │
-│                         ├─────────────────────┼──────────┤        │                   ├───────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│                         │ CVE-2021-41267      │ MEDIUM   │        │                   │ 5.3.12, 5.3.0                                             │ CVE-2021-41267: Webcache Poisoning via X-Forwarded-Prefix    │
-│                         │                     │          │        │                   │                                                           │ and sub-request                                              │
-│                         │                     │          │        │                   │                                                           │ https://avd.aquasec.com/nvd/cve-2021-41267                   │
-├─────────────────────────┼─────────────────────┼──────────┤        ├───────────────────┼───────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
-│ symfony/process         │ CVE-2024-51736      │ HIGH     │        │ v5.2.4            │ 3.0.0, 5.0.0, 6.1.0, 6.2.0, 6.3.0, 5.2.0, 5.3.0, 5.4.0,   │ CVE-2024-51736: Command execution hijack on Windows with     │
-│                         │                     │          │        │                   │ 5.1.0, 6.4.14, 7.1.0, 4.0.0, 5.4.46, 6.4.0, 7.1.7         │ Process class                                                │
-│                         │                     │          │        │                   │                                                           │ https://avd.aquasec.com/nvd/cve-2024-51736                   │
-└─────────────────────────┴─────────────────────┴──────────┴────────┴───────────────────┴───────────────────────────────────────────────────────────┴──────────────────────────────────────────────────────────────┘
+┌─────────────────────────┬─────────────────────┬──────────┬────────┬───────────────────┬────────────────────────────────────────────────────────────┬──────────────────────────────────────────────────────────────┐
+│         Library         │    Vulnerability    │ Severity │ Status │ Installed Version │                       Fixed Version                        │                            Title                             │
+├─────────────────────────┼─────────────────────┼──────────┼────────┼───────────────────┼────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ aws/aws-sdk-php         │ GHSA-27qh-8cxx-2cr5 │ HIGH     │ fixed  │ 3.158.10          │ 3.371.4                                                    │ AWS SDK for PHP has CloudFront Policy Document Injection via │
+│                         │                     │          │        │                   │                                                            │ Special Characters...                                        │
+│                         │                     │          │        │                   │                                                            │ https://github.com/advisories/GHSA-27qh-8cxx-2cr5            │
+│                         ├─────────────────────┼──────────┤        │                   ├────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                         │ CVE-2025-14761      │ MEDIUM   │        │                   │ 3.368.0                                                    │ Key Commitment Issues in S3 Encryption Clients               │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2025-14761                   │
+│                         ├─────────────────────┼──────────┤        │                   ├────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                         │ CVE-2023-51651      │ LOW      │        │                   │ 3.288.1                                                    │ Potential URI resolution path traversal in the AWS SDK for   │
+│                         │                     │          │        │                   │                                                            │ PHP                                                          │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2023-51651                   │
+├─────────────────────────┼─────────────────────┼──────────┤        ├───────────────────┼────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ firebase/php-jwt        │ CVE-2021-46743      │ CRITICAL │        │ v5.2.0            │ 6.0.0                                                      │ Key/algorithm type confusion                                 │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2021-46743                   │
+│                         ├─────────────────────┼──────────┤        │                   ├────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                         │ CVE-2025-45769      │ LOW      │        │                   │ 7.0.0                                                      │ php-jwt contains weak encryption                             │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2025-45769                   │
+├─────────────────────────┼─────────────────────┼──────────┤        ├───────────────────┼────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ guzzlehttp/guzzle       │ CVE-2022-29248      │ HIGH     │        │ 7.2.0             │ 7.4.3, 6.5.6                                               │ Guzzle is a PHP HTTP client. Guzzle prior to versions 6.5.6  │
+│                         │                     │          │        │                   │                                                            │ and...                                                       │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2022-29248                   │
+│                         ├─────────────────────┤          │        │                   ├────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                         │ CVE-2022-31042      │          │        │                   │ 7.4.4, 6.5.7                                               │ Guzzle is an open source PHP HTTP client. In affected        │
+│                         │                     │          │        │                   │                                                            │ versions the...                                              │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2022-31042                   │
+│                         ├─────────────────────┤          │        │                   │                                                            ├──────────────────────────────────────────────────────────────┤
+│                         │ CVE-2022-31043      │          │        │                   │                                                            │ Guzzle is an open source PHP HTTP client. In affected        │
+│                         │                     │          │        │                   │                                                            │ versions `Author...                                          │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2022-31043                   │
+│                         ├─────────────────────┤          │        │                   ├────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                         │ CVE-2022-31090      │          │        │                   │ 7.4.5, 6.5.8                                               │ Guzzle, an extensible PHP HTTP client. `Authorization`       │
+│                         │                     │          │        │                   │                                                            │ headers on requ ...                                          │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2022-31090                   │
+│                         ├─────────────────────┤          │        │                   │                                                            ├──────────────────────────────────────────────────────────────┤
+│                         │ CVE-2022-31091      │          │        │                   │                                                            │ Guzzle, an extensible PHP HTTP client. `Authorization` and   │
+│                         │                     │          │        │                   │                                                            │ `Cookie` he ...                                              │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2022-31091                   │
+├─────────────────────────┼─────────────────────┤          │        ├───────────────────┼────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ guzzlehttp/psr7         │ CVE-2022-24775      │          │        │ 1.7.0             │ 2.1.1, 1.8.4                                               │ guzzlehttp/psr7 is a PSR-7 HTTP message library. Versions    │
+│                         │                     │          │        │                   │                                                            │ prior to 1.8 ......                                          │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2022-24775                   │
+│                         ├─────────────────────┤          │        │                   ├────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                         │ CVE-2023-29197      │          │        │                   │ 2.4.5, 1.9.1                                               │ guzzlehttp/psr7 is a PSR-7 HTTP message library              │
+│                         │                     │          │        │                   │                                                            │ implementation in PHP. ...                                   │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2023-29197                   │
+├─────────────────────────┼─────────────────────┼──────────┤        ├───────────────────┼────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ laravel/framework       │ CVE-2021-43617      │ CRITICAL │        │ v8.40.0           │ 8.71.0                                                     │ Laravel Framework through 8.70.2 does not sufficiently block │
+│                         │                     │          │        │                   │                                                            │ the uploa ...                                                │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2021-43617                   │
+│                         ├─────────────────────┼──────────┤        │                   ├────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                         │ CVE-2024-52301      │ HIGH     │        │                   │ 11.31.0, 6.20.45, 7.30.7, 8.83.28, 9.52.17, 10.48.23       │ Laravel is a web application framework. When the             │
+│                         │                     │          │        │                   │                                                            │ register_argc_argv ph ...                                    │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2024-52301                   │
+│                         ├─────────────────────┼──────────┤        │                   ├────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                         │ CVE-2021-43808      │ MEDIUM   │        │                   │ 6.20.42, 7.30.6, 8.75.0                                    │ Laravel is a web application framework. Laravel prior to     │
+│                         │                     │          │        │                   │                                                            │ versions 8.75 ......                                         │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2021-43808                   │
+│                         ├─────────────────────┤          │        │                   ├────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                         │ CVE-2025-27515      │          │        │                   │ 12.1.1, 11.44.1, 10.48.29                                  │ Laravel is a web application framework. When using wildcard  │
+│                         │                     │          │        │                   │                                                            │ validation ...                                               │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2025-27515                   │
+├─────────────────────────┼─────────────────────┼──────────┤        ├───────────────────┼────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ league/commonmark       │ GHSA-c2pc-g5qf-rfrf │ HIGH     │        │ 1.5.8             │ 2.6.0                                                      │ league/commonmark&#39;s quadratic complexity bugs may lead to a  │
+│                         │                     │          │        │                   │                                                            │ denial of service                                            │
+│                         │                     │          │        │                   │                                                            │ https://github.com/advisories/GHSA-c2pc-g5qf-rfrf            │
+│                         ├─────────────────────┼──────────┤        │                   ├────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                         │ CVE-2025-46734      │ MEDIUM   │        │                   │ 2.7.0                                                      │ league/commonmark is a PHP Markdown parser. A cross-site     │
+│                         │                     │          │        │                   │                                                            │ scripting (XS ...                                            │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2025-46734                   │
+├─────────────────────────┼─────────────────────┤          │        ├───────────────────┼────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ nesbot/carbon           │ CVE-2025-22145      │          │        │ 2.46.0            │ 3.8.4, 2.72.6                                              │ Carbon is an international PHP extension for DateTime.       │
+│                         │                     │          │        │                   │                                                            │ Application pas ...                                          │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2025-22145                   │
+├─────────────────────────┼─────────────────────┤          │        ├───────────────────┼────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ nyholm/psr7             │ GHSA-wjfc-pgfp-pv9c │          │        │ 1.3.1             │ 1.6.1                                                      │ Improper Input Validation in nyholm/psr7                     │
+│                         │                     │          │        │                   │                                                            │ https://github.com/advisories/GHSA-wjfc-pgfp-pv9c            │
+├─────────────────────────┼─────────────────────┤          │        ├───────────────────┼────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ paragonie/sodium_compat │ CVE-2025-69277      │          │        │ v1.13.0           │ 2.5.0, 1.24.0                                              │ libsodium: pynacl: libsodium: Improper validation of         │
+│                         │                     │          │        │                   │                                                            │ elliptic curve points could lead to...                       │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2025-69277                   │
+├─────────────────────────┼─────────────────────┼──────────┤        ├───────────────────┼────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ phpseclib/phpseclib     │ CVE-2023-52892      │ HIGH     │        │ 2.0.31            │ 1.0.22, 2.0.46, 3.0.33                                     │ In phpseclib before 1.0.22, 2.x before 2.0.46, and 3.x       │
+│                         │                     │          │        │                   │                                                            │ before 3.0.33, ...                                           │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2023-52892                   │
+│                         ├─────────────────────┤          │        │                   ├────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                         │ CVE-2026-32935      │          │        │                   │ 3.0.50, 2.0.52, 1.0.27                                     │ phpseclib is a PHP secure communications library. Projects   │
+│                         │                     │          │        │                   │                                                            │ using versi ...                                              │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2026-32935                   │
+│                         ├─────────────────────┤          │        │                   ├────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                         │ CVE-2026-44167      │          │        │                   │ 1.0.29, 2.0.54, 3.0.52                                     │ phpseclib has a CVE-2024-27355 mitigation bypass — OID       │
+│                         │                     │          │        │                   │                                                            │ amplification DoS in ASN1::decodeOID()...                    │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2026-44167                   │
+│                         ├─────────────────────┼──────────┤        │                   ├────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                         │ CVE-2024-27354      │ MEDIUM   │        │                   │ 3.0.36, 2.0.47, 1.0.23                                     │ An issue was discovered in phpseclib 1.x before 1.0.23, 2.x  │
+│                         │                     │          │        │                   │                                                            │ before 2.0...                                                │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2024-27354                   │
+│                         ├─────────────────────┤          │        │                   │                                                            ├──────────────────────────────────────────────────────────────┤
+│                         │ CVE-2024-27355      │          │        │                   │                                                            │ An issue was discovered in phpseclib 1.x before 1.0.23, 2.x  │
+│                         │                     │          │        │                   │                                                            │ before 2.0...                                                │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2024-27355                   │
+│                         ├─────────────────────┼──────────┤        │                   ├────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                         │ CVE-2026-40194      │ LOW      │        │                   │ 1.0.28, 2.0.53, 3.0.51                                     │ phpseclib is a PHP secure communications library. Starting   │
+│                         │                     │          │        │                   │                                                            │ in 0.1.1 an ......                                           │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2026-40194                   │
+├─────────────────────────┼─────────────────────┼──────────┤        ├───────────────────┼────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ psy/psysh               │ CVE-2026-25129      │ MEDIUM   │        │ v0.10.4           │ 0.12.19, 0.11.23                                           │ PsySH has Local Privilege Escalation via CWD .psysh.php      │
+│                         │                     │          │        │                   │                                                            │ auto-load                                                    │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2026-25129                   │
+├─────────────────────────┼─────────────────────┤          │        ├───────────────────┼────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ react/http              │ CVE-2022-36032      │          │        │ v1.1.0            │ 1.7.0                                                      │ ReactPHP&#39;s HTTP server parses encoded cookie names so        │
+│                         │                     │          │        │                   │                                                            │ malicious `__Host-` and `__Secure-`...                       │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2022-36032                   │
+│                         ├─────────────────────┤          │        │                   ├────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                         │ CVE-2023-26044      │          │        │                   │ 1.9.0                                                      │ react/http is an event-driven, streaming HTTP client and     │
+│                         │                     │          │        │                   │                                                            │ server implem ...                                            │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2023-26044                   │
+├─────────────────────────┼─────────────────────┼──────────┤        ├───────────────────┼────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ symfony/http-foundation │ CVE-2025-64500      │ HIGH     │        │ v5.2.4            │ 3.0.0, 5.4.50, 6.1.0, 6.2.0, 6.3.0, 6.4.0, 6.4.29, 5.2.0,  │ Symfony is a PHP framework for web and console applications  │
+│                         │                     │          │        │                   │ 5.4.0, 7.3.0, 4.0.0, 5.1.0, 5.3.0, 5.0.0, 7.1.0, 7.2.0,    │ and a...                                                     │
+│                         │                     │          │        │                   │ 7.3.7                                                      │ https://avd.aquasec.com/nvd/cve-2025-64500                   │
+│                         ├─────────────────────┼──────────┤        │                   ├────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                         │ CVE-2024-50345      │ MEDIUM   │        │                   │ 5.2.0, 5.4.46, 7.1.0, 3.0.0, 5.0.0, 5.1.0, 5.4.0, 6.2.0,   │ symfony/http-foundation is a module for the Symphony PHP     │
+│                         │                     │          │        │                   │ 6.3.0, 5.3.0, 6.1.0, 7.1.7, 4.0.0, 6.4.0, 6.4.14           │ framework whi ...                                            │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2024-50345                   │
+├─────────────────────────┼─────────────────────┼──────────┤        ├───────────────────┼────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ symfony/http-kernel     │ CVE-2022-24894      │ HIGH     │        │ v5.2.6            │ 2.3.0, 2.5.0, 2.7.0, 2.8.0, 3.2.0, 4.4.0, 5.1.0, 5.4.0,    │ Symfony is a PHP framework for web and console applications  │
+│                         │                     │          │        │                   │ 2.4.0, 3.0.0, 3.3.0, 4.3.0, 4.4.50, 5.2.0, 5.4.20, 6.0.20, │ and a...                                                     │
+│                         │                     │          │        │                   │ 4.0.0, 2.2.0, 3.1.0, 3.4.0, 4.2.0, 6.1.12, 6.2.6, 2.1.0,   │ https://avd.aquasec.com/nvd/cve-2022-24894                   │
+│                         │                     │          │        │                   │ 2.6.0, 4.1.0, 5.3.0                                        │                                                              │
+│                         ├─────────────────────┼──────────┤        │                   ├────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                         │ CVE-2021-41267      │ MEDIUM   │        │                   │ 5.3.0, 5.3.12                                              │ CVE-2021-41267: Webcache Poisoning via X-Forwarded-Prefix    │
+│                         │                     │          │        │                   │                                                            │ and sub-request                                              │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2021-41267                   │
+├─────────────────────────┼─────────────────────┼──────────┤        ├───────────────────┼────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ symfony/process         │ CVE-2024-51736      │ CRITICAL │        │ v5.2.4            │ 6.2.0, 5.0.0, 5.3.0, 6.3.0, 7.1.0, 3.0.0, 5.2.0, 6.1.0,    │ CVE-2024-51736: Command execution hijack on Windows with     │
+│                         │                     │          │        │                   │ 6.4.14, 7.1.7, 5.1.0, 5.4.0, 5.4.46, 6.4.0, 4.0.0          │ Process class                                                │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2024-51736                   │
+│                         ├─────────────────────┼──────────┤        │                   ├────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                         │ CVE-2026-24739      │ MEDIUM   │        │                   │ 5.4.51, 6.4.33, 7.3.11, 7.4.5, 8.0.5                       │ Symfony&#39;s incorrect argument escaping under MSYS2/Git Bash   │
+│                         │                     │          │        │                   │                                                            │ can lead to destructive file...                              │
+│                         │                     │          │        │                   │                                                            │ https://avd.aquasec.com/nvd/cve-2026-24739                   │
+└─────────────────────────┴─────────────────────┴──────────┴────────┴───────────────────┴────────────────────────────────────────────────────────────┴──────────────────────────────────────────────────────────────┘
 
 package-lock.json (npm)
 =======================
-Total: 7 (UNKNOWN: 0, LOW: 1, MEDIUM: 3, HIGH: 3, CRITICAL: 0)
+Total: 6 (UNKNOWN: 0, LOW: 1, MEDIUM: 2, HIGH: 3, CRITICAL: 0)
 
 ┌─────────────────┬─────────────────────┬──────────┬────────┬───────────────────┬───────────────┬──────────────────────────────────────────────────────────────┐
 │     Library     │    Vulnerability    │ Severity │ Status │ Installed Version │ Fixed Version │                            Title                             │
 ├─────────────────┼─────────────────────┼──────────┼────────┼───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
-│ bootstrap       │ CVE-2024-6531       │ MEDIUM   │ fixed  │ 4.3.1             │ 5.0.0         │ A vulnerability has been identified in Bootstrap that        │
-│                 │                     │          │        │                   │               │ exposes users to ......                                      │
-│                 │                     │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2024-6531                    │
-├─────────────────┼─────────────────────┼──────────┤        ├───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
-│ datatables.net  │ CVE-2020-28458      │ HIGH     │        │ 1.10.19           │ 1.10.22       │ datatables.net: prototype pollution if &#39;constructor&#39; were    │
+│ datatables.net  │ CVE-2020-28458      │ HIGH     │ fixed  │ 1.10.19           │ 1.10.22       │ datatables.net: prototype pollution if &#39;constructor&#39; were    │
 │                 │                     │          │        │                   │               │ used in a data property name...                              │
 │                 │                     │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2020-28458                   │
 │                 ├─────────────────────┼──────────┤        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
